@@ -8,6 +8,7 @@ import { CreateUserDto } from './createuser.dto';
 import { LoginUserDto } from './login.dto';
 import { HashService } from './hash.service';
 import { JwtService } from '@nestjs/jwt';
+import { isEmail } from 'class-validator';
 @Injectable()
 export class UserService {
   constructor(
@@ -16,14 +17,14 @@ export class UserService {
     private jwtService: JwtService,
   ) {}
   async createUser(createUserDto: CreateUserDto) {
-    const user = await this.prismaService.user.findUnique({
+    const isEmail = await this.prismaService.user.findUnique({
       where: { email: createUserDto.email },
     });
     const isUser = await this.prismaService.user.findUnique({
       where: { username: createUserDto.username },
     });
 
-    if (user) {
+    if (isEmail) {
       throw new ConflictException('Email already exists');
     }
 
@@ -53,7 +54,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new BadRequestException('Invalid email or password');
+      throw new BadRequestException('Invalid email');
     }
 
     const isPasswordValid = await this.hashService.comparePassword(
@@ -62,7 +63,7 @@ export class UserService {
     );
 
     if (!isPasswordValid) {
-      throw new BadRequestException('Invalid email or password');
+      throw new BadRequestException('Invalid password');
     }
 
     const payload = { sub: user.id, username: user.username };
@@ -70,7 +71,16 @@ export class UserService {
       access_token: await this.jwtService.signAsync(payload), // async preferred
     };
   }
-  async generateToken(payload: any) {
-    return this.jwtService.signAsync(payload);
+  async generateToken(
+    payload: any,
+    expiresIn: string = '60s',
+  ): Promise<string> {
+    if (!payload || typeof payload !== 'object') {
+      throw new BadRequestException('Invalid payload');
+    }
+    if (expiresIn) {
+      throw new BadRequestException('Token is expired');
+    }
+    return this.jwtService.signAsync(payload, { expiresIn });
   }
 }
