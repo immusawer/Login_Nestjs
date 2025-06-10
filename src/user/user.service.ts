@@ -71,10 +71,7 @@ export class UserService {
       access_token: await this.jwtService.signAsync(payload), // async preferred
     };
   }
-  async generateToken(
-    payload: any,
-    expiresIn: string = '60s',
-  ): Promise<string> {
+  async generateToken(payload: any, expiresIn: string = '1d'): Promise<string> {
     if (!payload || typeof payload !== 'object') {
       throw new BadRequestException('Invalid payload');
     }
