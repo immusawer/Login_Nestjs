@@ -72,12 +72,29 @@ export class UserService {
     };
   }
   async generateToken(payload: any, expiresIn: string = '1d'): Promise<string> {
-    if (!payload || typeof payload !== 'object') {
-      throw new BadRequestException('Invalid payload');
-    }
-    if (expiresIn) {
-      throw new BadRequestException('Token is expired');
-    }
     return this.jwtService.signAsync(payload, { expiresIn });
+  }
+  async getUsers() {
+    return this.prismaService.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        password: true,
+      },
+    });
+  }
+  async deleteUser(id: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
+    if (!user) {
+      throw new BadRequestException('User not found with this specification!');
+    }
+    return await this.prismaService.user.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

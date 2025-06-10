@@ -5,13 +5,14 @@ import {
   Post,
   UseGuards,
   Request,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './createuser.dto';
 import { LoginUserDto } from './login.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('register')
@@ -26,5 +27,17 @@ export class UserController {
   @Get('profile')
   getProfile(@Request() req) {
     return req.user; // this comes from the validate() method in JwtStrategy
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  getUser() {
+    return this.userService.getUsers(); // Assuming getUser is a method in UserService that fetches user by ID
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete')
+  deleteUser(@Body('id') id: number) {
+    return this.userService.deleteUser(id);
   }
 }

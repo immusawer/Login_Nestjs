@@ -1,9 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
-  UseFilters,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { CreateProductDto } from './product.dto';
@@ -22,5 +23,18 @@ export class ProductsController {
   @Get('get')
   async getProducts() {
     return this.productsService.getProducts();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('delete')
+  async deleteProduct(@Body('id') id: number) {
+    return this.productsService.deleteProduct(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('update')
+  async updateProduct(@Body() updateData: { id: number } & CreateProductDto) {
+    const { id, ...CreateProductDto } = updateData;
+    return this.productsService.updateProduct(id, CreateProductDto);
   }
 }
