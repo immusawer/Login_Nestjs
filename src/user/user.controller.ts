@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './createuser.dto';
-import { LoginUserDto } from './login.dto';
+import { CreateUserDto } from './dto/createuser.dto';
+import { LoginUserDto } from './dto/login.dto';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')

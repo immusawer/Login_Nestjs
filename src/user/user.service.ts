@@ -4,9 +4,9 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './createuser.dto';
-import { LoginUserDto } from './login.dto';
-import { HashService } from './hash.service';
+import { CreateUserDto } from './dto/createuser.dto';
+import { LoginUserDto } from './dto/login.dto';
+import { HashService } from '../auth/hash.service';
 import { JwtService } from '@nestjs/jwt';
 import { isEmail } from 'class-validator';
 @Injectable()

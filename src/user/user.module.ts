@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { HashService } from './hash.service';
+import { HashService } from '../auth/hash.service';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
+import { JwtStrategy } from '../auth/jwt.strategy';
 @Module({
   imports: [
     PrismaModule,
