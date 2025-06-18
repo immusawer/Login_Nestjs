@@ -10,11 +10,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createuser.dto';
 import { LoginUserDto } from './dto/login.dto';
-import { JwtAuthGuard } from 'src/auth/auth.guard';
+import { JwtAuthGuard } from '../auth/auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
+
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);

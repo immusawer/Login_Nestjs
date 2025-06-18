@@ -10,7 +10,8 @@ import {
 import { CreateProductDto } from './dto/product.dto';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('users')
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
